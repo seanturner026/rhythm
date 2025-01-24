@@ -1,0 +1,7 @@
+boto3
+fastapi[standard]
+mlflow
+numpy
+pandas
+pydantic
+scikit-learn
