@@ -4,11 +4,11 @@ uv pip compile requirements/base.in > requirements/requirements.txt
 uv pip install -r requirements/requirements.txt
 
 source .venv/bin/activate
+docker build -t rhythm .
+docker compose up mlflow
 python3 -m rhythm.pipelines.train
 
-docker build -t rhythm .
 docker compose up
-
 curl -X POST "http://localhost:8000/predict" \
     -H "Content-Type: application/json" \
     -d '{

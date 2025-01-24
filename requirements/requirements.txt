@@ -243,7 +243,6 @@ typer==0.15.1
 typing-extensions==4.12.2
     # via
     #   alembic
-    #   anyio
     #   fastapi
     #   graphene
     #   mlflow-skinny
