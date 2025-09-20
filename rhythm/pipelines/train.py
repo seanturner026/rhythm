@@ -1,3 +1,5 @@
+import logging
+
 import mlflow
 import pandas as pd
 from mlflow.models import infer_signature
@@ -6,7 +8,10 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 
-from rhythm.utils.mlflow import configure_mlflow
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger(__name__)
+
+logger.info("training initial model")
 
 X, y = datasets.load_iris(return_X_y=True)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
@@ -23,12 +28,12 @@ lr.fit(X_train, y_train)
 y_pred = lr.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
 
-configure_mlflow()
+mlflow.set_tracking_uri("http://localhost:5000")
 
 with mlflow.start_run():
-    mlflow.log_params(params)
-    mlflow.log_metric("accuracy", accuracy)
-    mlflow.set_tag("Training Info", "Basic LR model for iris data")
+    _ = mlflow.log_params(params)
+    _ = mlflow.log_metric("accuracy", accuracy)
+    _ = mlflow.set_tag("Training Info", "Basic LR model for iris data")
     signature = infer_signature(X_train, lr.predict(X_train))
     model_info = mlflow.sklearn.log_model(
         sk_model=lr,

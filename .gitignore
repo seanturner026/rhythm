@@ -13,3 +13,4 @@ wheels/
 mlartifacts/
 mlruns/
 .env
+.DS_Store

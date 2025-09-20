@@ -6,15 +6,11 @@ import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from rhythm.utils.mlflow import configure_mlflow
-
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 app = FastAPI()
 
-configure_mlflow()
-
-
+mlflow.set_tracking_uri("http://localhost:5000")
 model_uri: str = "models:/tracking-quickstart/1"
 model = mlflow.sklearn.load_model(model_uri=model_uri)
 logger.info("server ready")

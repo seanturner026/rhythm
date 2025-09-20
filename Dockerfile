@@ -1,19 +1,18 @@
-FROM python:3.11-slim-bookworm
-
-COPY --from=ghcr.io/astral-sh/uv:0.4.9 /uv /bin/uv
-
-ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
+# https://docs.astral.sh/uv/guides/integration/docker
+FROM python:3.13-slim
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 WORKDIR /app
 
-COPY uv.lock pyproject.toml /app/
-
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 RUN --mount=type=cache,target=/root/.cache/uv \
-	uv sync --frozen --no-install-project --no-dev
+	--mount=type=bind,source=uv.lock,target=uv.lock \
+	--mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+	uv sync --locked --no-install-project
 
 COPY . /app
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-	uv sync --frozen --no-dev
+	uv sync --locked
 
 ENV PATH="/app/.venv/bin:$PATH"
