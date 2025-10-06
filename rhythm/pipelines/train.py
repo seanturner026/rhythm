@@ -85,12 +85,3 @@ def ensure_model_exists():
     except MlflowException:
         logger.info(f"Model '{MODEL_NAME}' not found, training new model...")
         train_and_register_model()
-
-
-def main():
-    """Main entry point for training"""
-    ensure_model_exists()
-
-
-if __name__ == "__main__":
-    main()
