@@ -60,12 +60,12 @@ def train_and_register_model():
         params = {"max_depth": 2, "random_state": 42}
         model = RandomForestRegressor(**params)
         model.fit(X_train, y_train)
-        mlflow.log_params(params)
+        _ = mlflow.log_params(params)
 
         y_pred = model.predict(X_test)
-        mlflow.log_metrics({"mse": mean_squared_error(y_test, y_pred)})
+        _ = mlflow.log_metrics({"mse": mean_squared_error(y_test, y_pred)})
 
-        log_model(
+        _ = log_model(
             sk_model=model,
             artifact_path="model",
             input_example=X_train,
@@ -80,7 +80,7 @@ def ensure_model_exists():
     client = get_mlflow_client()
 
     try:
-        client.get_registered_model(MODEL_NAME)
+        _ = client.get_registered_model(MODEL_NAME)
         logger.info(f"Model '{MODEL_NAME}' already exists")
     except MlflowException:
         logger.info(f"Model '{MODEL_NAME}' not found, training new model...")
