@@ -4,7 +4,7 @@ services:
     command: uvicorn rhythm.api.main:app --host 0.0.0.0 --port 8000
     depends_on:
       mlflow:
-        condition: service_started
+        condition: service_healthy
     environment:
       - MLFLOW_HOST=mlflow
       - MLFLOW_PORT=8080
@@ -21,3 +21,9 @@ services:
     volumes:
       - ./mlartifacts:/app/mlartifacts
       - ./mlruns:/app/mlruns
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
